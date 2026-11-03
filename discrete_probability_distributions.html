@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discrete Probability Distributions</title>
+<style>
+:root{--ink:#172033;--muted:#64748b;--line:#e2e8f0;--bg:#f5f7fb;--blue:#315ee7;--blue2:#eaf0ff;--card:#fff;--green:#087f5b}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.top{max-width:1120px;margin:auto;padding:17px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.brand{font-size:17px;font-weight:750;letter-spacing:-.3px}.brand span{color:var(--blue)}
+nav{display:flex;gap:6px;flex-wrap:wrap}nav button{border:0;background:transparent;color:#526078;padding:9px 13px;border-radius:9px;font:600 13px inherit;cursor:pointer}nav button.active,nav button:hover{background:var(--blue2);color:var(--blue)}
+main{max-width:1120px;margin:30px auto;padding:0 22px 55px}.page{display:none}.page.active{display:block}
+.hero{padding:34px;border-radius:18px;background:linear-gradient(125deg,#172b59,#315ee7);color:white;margin-bottom:22px}.eyebrow{text-transform:uppercase;letter-spacing:1.6px;font-size:11px;font-weight:700;opacity:.8}.hero h1{font-size:clamp(27px,4vw,40px);margin:10px 0}.hero p{max-width:680px;color:#e0e8ff;line-height:1.65;margin:0}
+h1,h2,h3,p{margin-top:0}h1{font-size:30px;letter-spacing:-.8px;margin-bottom:8px}h2{font-size:18px;margin-bottom:15px}h3{font-size:15px;margin-bottom:9px}.sub{color:var(--muted);line-height:1.6;margin-bottom:22px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:22px;margin-bottom:18px;box-shadow:0 3px 12px #14213b08}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+label{display:block;font-size:13px;font-weight:650;color:#334155;margin-bottom:7px}
+input{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:9px;font:inherit;color:var(--ink);outline:none;background:white}
+input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #315ee71a}
+.field small,.hint{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:6px}
+.selected{margin-top:14px;padding:11px 13px;border-radius:9px;background:#f1f5ff;color:#294db7;font-size:13px;font-weight:650}
+.stat{border:1px solid var(--line);border-radius:12px;padding:15px 13px;background:#fff;min-width:0}.stat .name{font-size:12px;color:var(--muted);margin-bottom:9px}.stat .value{font-size:21px;font-weight:750;letter-spacing:-.5px;overflow-wrap:anywhere}
+.formula{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:14px;color:#24324a;font-family:Georgia,serif;font-size:17px;text-align:center;margin:12px 0}
+.result{margin-top:13px;background:#eefbf5;border:1px solid #c7f0dc;border-radius:10px;padding:14px}.result strong{font-size:21px;color:var(--green);display:block;margin-top:5px;overflow-wrap:anywhere}
+.result-label{font-size:12px;color:#356b57;font-weight:650}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.chart-wrap{width:100%;overflow:hidden}.chart-wrap svg{display:block;width:100%;height:auto;min-height:230px}
+.chart-note{font-size:12px;color:var(--muted);margin-top:8px}
+.error{color:#b42318;font-size:12px;min-height:17px;margin-top:6px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.mini{padding:17px;border:1px solid var(--line);border-radius:12px;background:white}.mini h3{margin-bottom:7px}.mini p{font-size:13px;color:var(--muted);line-height:1.5;margin:0}
+footer{text-align:center;color:#94a3b8;font-size:12px;padding:24px}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.grid,.calc-grid{grid-template-columns:1fr}}
+@media(max-width:480px){main{padding:0 14px 35px;margin-top:18px}.top{padding:13px 14px}.hero{padding:24px}.panel{padding:17px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat:last-child{grid-column:span 2}.brand{font-size:15px}nav button{padding:8px 9px}}
+</style>
+</head>
+<body>
+<header><div class="top">
+  <div class="brand">AIML LAB <span> / Probability</span></div>
+  <nav aria-label="Main navigation">
+    <button class="active" data-page="home">Home</button>
+    <button data-page="binomial">Binomial</button>
+    <button data-page="poisson">Poisson</button>
+    <button data-page="geometric">Geometric</button>
+  </nav>
+</div></header>
+<main>
+<section id="home" class="page active">
+  <div class="hero"><div class="eyebrow">Undergraduate AIML Laboratory</div><h1>Discrete Probability Distributions</h1><p>Explore probability models for counting successes and events. Change the parameters, calculate probabilities and understand each distribution through its statistics and probability graph.</p></div>
+  <div class="cards">
+    <article class="mini"><h3>01 · Binomial Distribution</h3><p>Models the number of successes in a fixed number of independent trials.</p></article>
+    <article class="mini"><h3>02 · Poisson Distribution</h3><p>Models the number of events occurring in a fixed interval at an average rate.</p></article>
+    <article class="mini"><h3>03 · Geometric Distribution</h3><p>Models the trial number on which the first success occurs.</p></article>
+  </div>
+  <div class="panel" style="margin-top:18px"><h2>How to use this laboratory</h2><p class="sub" style="margin:0">Choose a distribution from the navigation above. Enter its parameters to view the mean, variance, standard deviation, second moment, skewness, PMF, CDF and probability mass function graph.</p></div>
+</section>
+
+<section id="binomial" class="page">
+  <h1>Binomial Distribution</h1><p class="sub">The binomial distribution describes the number of successes in a fixed number of independent trials, each with the same probability of success.</p>
+  <div class="panel"><h2>Distribution parameters</h2><div class="grid">
+    <div class="field"><label for="bn">Number of trials (n)</label><input id="bn" type="number" min="1" step="1" value="20"><small>Enter a positive integer.</small><div class="error" id="bnErr"></div></div>
+    <div class="field"><label for="bp">Probability of success (p)</label><input id="bp" type="number" min="0" max="1" step="any" value="0.35"><small>Enter a value from 0 to 1, inclusive.</small><div class="error" id="bpErr"></div></div>
+  </div><div class="selected" id="bSelected">Selected values: n = 20, p = 0.35</div></div>
+  <div class="panel"><h2>Statistical measures</h2><div class="stats" id="bStats"></div></div>
+  <div class="panel"><h2>Probability Mass Function (PMF)</h2><div class="formula">P(X = k) = C(n,k) p<sup>k</sup> (1-p)<sup>n-k</sup></div><div class="calc-grid">
+    <div><label for="bk">Number of successes (k)</label><input id="bk" type="number" min="0" step="1" value="7"><div class="error" id="bkErr"></div><div class="result"><span class="result-label">P(X = k)</span><strong id="bPmf">—</strong></div><p class="hint">This is the probability of getting exactly k successes in n trials.</p></div>
+    <div><h3>Interpretation</h3><p class="sub">The PMF gives the probability of each possible number of successes, from 0 through n.</p></div>
+  </div></div>
+  <div class="panel"><h2>Cumulative Distribution Function (CDF)</h2><div class="calc-grid"><div><label for="bck">Number of successes (k)</label><input id="bck" type="number" min="0" step="1" value="7"><div class="error" id="bckErr"></div></div><div class="result"><span class="result-label">P(X ≤ k)</span><strong id="bCdf">—</strong><span class="result-label" style="display:block;margin-top:12px">P(X &gt; k)</span><strong id="bTail">—</strong></div></div><p class="hint">P(X ≤ k) means the probability of getting k or fewer successes.</p></div>
+  <div class="panel"><h2>Binomial PMF graph</h2><div class="chart-wrap" id="bChart"></div><p class="chart-note">The dashed vertical line indicates the mean. Hover over a bar to see its probability.</p></div>
+</section>
+
+<section id="poisson" class="page">
+  <h1>Poisson Distribution</h1><p class="sub">The Poisson distribution models the number of events occurring in a fixed interval of time, space or another defined unit, when events occur at a constant average rate.</p>
+  <div class="panel"><h2>Distribution parameter</h2><div class="field"><label for="pl">Average event rate (λ)</label><input id="pl" type="number" min="0" step="any" value="4"><small>λ represents the average number of events in a fixed interval. Enter a non-negative number.</small><div class="error" id="plErr"></div></div><div class="selected" id="pSelected">Selected value: λ = 4</div><div class="formula">P(X = k) = (e<sup>−λ</sup> × λ<sup>k</sup>) / k!</div></div>
+  <div class="panel"><h2>Statistical measures</h2><div class="stats" id="pStats"></div></div>
+  <div class="panel"><h2>Probability Mass Function (PMF)</h2><div class="formula">P(X = k) = (e<sup>−λ</sup> × λ<sup>k</sup>) / k!</div><div class="calc-grid"><div><label for="pk">Number of events (k)</label><input id="pk" type="number" min="0" step="1" value="4"><div class="error" id="pkErr"></div><div class="result"><span class="result-label">P(X = k)</span><strong id="pPmf">—</strong></div></div><div><h3>Interpretation</h3><p class="sub">This is the probability of observing exactly k events in the specified interval.</p></div></div></div>
+  <div class="panel"><h2>Cumulative Distribution Function (CDF)</h2><div class="calc-grid"><div><label for="pck">Number of events (k)</label><input id="pck" type="number" min="0" step="1" value="4"><div class="error" id="pckErr"></div></div><div class="result"><span class="result-label">P(X ≤ k)</span><strong id="pCdf">—</strong><span class="result-label" style="display:block;margin-top:12px">P(X &gt; k)</span><strong id="pTail">—</strong></div></div><p class="hint">P(X ≤ k) means the probability of observing k or fewer events in the specified interval.</p></div>
+  <div class="panel"><h2>Poisson PMF graph</h2><div class="chart-wrap" id="pChart"></div><p class="chart-note">The dashed vertical line indicates the mean λ. Hover over a bar to see its probability.</p></div>
+</section>
+
+<section id="geometric" class="page">
+  <h1>Geometric Distribution</h1><p class="sub">The geometric distribution models the number of independent trials needed to obtain the first success. Here, X is the trial number on which the first success occurs: X = 1, 2, 3, ... .</p>
+  <div class="panel"><h2>Distribution parameter</h2><div class="field"><label for="gp">Probability of success (p)</label><input id="gp" type="number" min="0.000000000001" max="1" step="any" value="0.35"><small>p is the probability of success on each independent trial and remains constant from trial to trial. Enter a value greater than 0 and at most 1.</small><div class="error" id="gpErr"></div></div><div class="selected" id="gSelected">Selected value: p = 0.35</div><div class="formula">P(X = k) = (1-p)<sup>k−1</sup> × p</div></div>
+  <div class="panel"><h2>Statistical measures</h2><div class="stats" id="gStats"></div></div>
+  <div class="panel"><h2>Probability Mass Function (PMF)</h2><div class="formula">P(X = k) = (1-p)<sup>k−1</sup> × p</div><div class="calc-grid"><div><label for="gk">Trial number (k)</label><input id="gk" type="number" min="1" step="1" value="3"><div class="error" id="gkErr"></div><div class="result"><span class="result-label">P(X = k)</span><strong id="gPmf">—</strong></div></div><div><h3>Interpretation</h3><p class="sub">This is the probability that the first success occurs exactly on trial k.</p></div></div></div>
+  <div class="panel"><h2>Cumulative Distribution Function (CDF)</h2><div class="calc-grid"><div><label for="gck">Trial number (k)</label><input id="gck" type="number" min="1" step="1" value="3"><div class="error" id="gckErr"></div></div><div class="result"><span class="result-label">P(X ≤ k)</span><strong id="gCdf">—</strong><span class="result-label" style="display:block;margin-top:12px">P(X &gt; k)</span><strong id="gTail">—</strong></div></div><p class="hint">P(X ≤ k) means the probability that the first success occurs on or before trial k. P(X &gt; k) is the probability of getting no successes in the first k trials.</p></div>
+  <div class="panel"><h2>Geometric PMF graph</h2><div class="chart-wrap" id="gChart"></div><p class="chart-note">The dashed vertical line indicates the mean 1/p. Hover over a bar to see its probability.</p></div>
+</section>
+</main>
+<footer>Discrete Probability Distributions · Undergraduate AIML Laboratory</footer>
+<script>
+const $=id=>document.getElementById(id);
+const fmt=(x,d=6)=>Number.isFinite(x)?(Math.abs(x)<1e-14? "0":Number(x.toPrecision(d)).toString()):"Undefined";
+const pct=x=>(x*100).toFixed(4)+"%";
+function setStats(id,items){$(id).innerHTML=items.map(([n,v])=>`<div class="stat"><div class="name">${n}</div><div class="value">${v}</div></div>`).join("")}
+function validInt(v,min,max=Infinity){return Number.isInteger(v)&&v>=min&&v<=max}
+function logGamma(z){const c=[676.5203681218851,-1259.1392167224028,771.3234287776531,-176.6150291621406,12.507343278686905,-0.13857109526572012,9.984369578019572e-6,1.5056327351493116e-7];if(z<0.5)return Math.log(Math.PI)-Math.log(Math.sin(Math.PI*z))-logGamma(1-z);z-=1;let x=0.99999999999980993;for(let i=0;i<c.length;i++)x+=c[i]/(z+i+1);let t=z+7.5;return .5*Math.log(2*Math.PI)+(z+.5)*Math.log(t)-t+Math.log(x)}
+function binPmf(n,p,k){if(k<0||k>n)return 0;if(p===0)return k===0?1:0;if(p===1)return k===n?1:0;let l=logGamma(n+1)-logGamma(k+1)-logGamma(n-k+1)+k*Math.log(p)+(n-k)*Math.log1p(-p);return Math.exp(l)}
+function binCdf(n,p,k){if(k<0)return 0;if(k>=n)return 1;if(p===0)return 1;if(p===1)return 0;let s=0;for(let i=0;i<=k;i++)s+=binPmf(n,p,i);return Math.min(1,s)}
+function poisPmf(l,k){if(k<0)return 0;if(l===0)return k===0?1:0;return Math.exp(-l+k*Math.log(l)-logGamma(k+1))}
+function poisCdf(l,k){if(k<0)return 0;if(l===0)return 1;let term=Math.exp(-l),sum=term;for(let i=1;i<=k;i++){term*=l/i;sum+=term;if(term===0)break}return Math.min(1,sum)}
+function geoPmf(p,k){if(k<1)return 0;if(p===1)return k===1?1:0;return Math.exp(Math.log(p)+(k-1)*Math.log1p(-p))}
+function geoCdf(p,k){if(k<1)return 0;if(p===1)return 1;return -Math.expm1(k*Math.log1p(-p))}
+function drawChart(id,values,mean,xLabel){const W=850,H=300,L=58,R=18,T=18,B=48,iw=W-L-R,ih=H-T-B;let ymax=Math.max(...values.map(d=>d.y),1e-12)*1.14;let xMin=values[0].x,xMax=values[values.length-1].x;const sx=x=>L+(x-xMin)/(Math.max(1,xMax-xMin))*iw,sy=y=>T+ih-y/ymax*ih;let bars=values.map(d=>{let step=iw/values.length,bw=Math.max(1,step*.72),x=sx(d.x)-bw/2,y=sy(d.y),h=T+ih-y;return `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${bw.toFixed(2)}" height="${Math.max(0,h).toFixed(2)}" rx="2" fill="#5478ee"><title>X = ${d.x}\nP(X = ${d.x}) = ${d.y.toPrecision(7)}</title></rect>`}).join("");let ticks=4,grid="";for(let i=0;i<=ticks;i++){let v=ymax*i/ticks,y=sy(v);grid+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#e8edf5"/><text x="${L-9}" y="${y+4}" text-anchor="end" font-size="11" fill="#718096">${v.toFixed(3)}</text>`}
+let meanX=sx(Math.max(xMin,Math.min(xMax,mean)));let mx=mean>=xMin&&mean<=xMax?`<line x1="${meanX}" y1="${T}" x2="${meanX}" y2="${T+ih}" stroke="#e05a47" stroke-width="2" stroke-dasharray="6 5"><title>Mean = ${mean}</title></line>`:"";
+let labelStep=Math.max(1,Math.ceil(values.length/12)),labels=values.filter((d,i)=>i%labelStep===0||i===values.length-1).map(d=>`<text x="${sx(d.x)}" y="${H-25}" text-anchor="middle" font-size="11" fill="#718096">${d.x}</text>`).join("");
+$(id).innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Probability mass function bar chart"><text x="${L}" y="12" font-size="11" fill="#718096">Probability P(X)</text>${grid}${bars}${mx}${labels}<line x1="${L}" y1="${T+ih}" x2="${W-R}" y2="${T+ih}" stroke="#94a3b8"/><text x="${L+iw/2}" y="${H-4}" text-anchor="middle" font-size="12" fill="#475569">${xLabel}</text></svg>`;
+}
+function updateBin(){
+ let n=Number($("bn").value),p=Number($("bp").value),okN=validInt(n,1),okP=Number.isFinite(p)&&p>=0&&p<=1;
+ $("bnErr").textContent=okN?"":"n must be a positive integer."; $("bpErr").textContent=okP?"":"p must be between 0 and 1.";
+ if(!okN||!okP){$("bSelected").textContent="Please correct the invalid parameters.";return}
+ $("bSelected").textContent=`Selected values: n = ${n}, p = ${p}`;
+ let mean=n*p,variance=mean*(1-p),sd=Math.sqrt(variance),second=variance+mean*mean,skew=variance===0?"Undefined":(1-2*p)/sd;
+ setStats("bStats",[["Mean",fmt(mean)],["Variance",fmt(variance)],["Standard deviation",fmt(sd)],["Second moment E[X²]",fmt(second)],["Skewness",fmt(skew)]]);
+ let k=Number($("bk").value),ok=validInt(k,0,n);$("bkErr").textContent=ok?"":`k must be an integer from 0 to ${n}.`;$("bPmf").textContent=ok?fmt(binPmf(n,p,k),9):"Invalid input";
+ let ck=Number($("bck").value),cok=validInt(ck,0,n);$("bckErr").textContent=cok?"":`k must be an integer from 0 to ${n}.`;$("bCdf").textContent=cok?fmt(binCdf(n,p,ck),9):"Invalid input";$("bTail").textContent=cok?fmt(1-binCdf(n,p,ck),9):"Invalid input";
+ if(n<=3000){drawChart("bChart",Array.from({length:n+1},(_,i)=>({x:i,y:binPmf(n,p,i)})),mean,"Number of successes X")}else $("bChart").textContent="Chart is hidden for n above 3000 to keep the page responsive.";
+}
+function updatePois(){
+ let l=Number($("pl").value),ok=Number.isFinite(l)&&l>=0;$("plErr").textContent=ok?"":"λ must be a non-negative number.";if(!ok){$("pSelected").textContent="Please correct the invalid parameter.";return}
+ $("pSelected").textContent=`Selected value: λ = ${l}`;let sd=Math.sqrt(l),second=l+l*l,skew=l>0?1/sd:"Undefined";
+ setStats("pStats",[["Mean",fmt(l)],["Variance",fmt(l)],["Standard deviation",fmt(sd)],["Second moment E[X²]",fmt(second)],["Skewness",fmt(skew)]]);
+ let k=Number($("pk").value),okK=validInt(k,0);$("pkErr").textContent=okK?"":"k must be a non-negative integer.";$("pPmf").textContent=okK?fmt(poisPmf(l,k),9):"Invalid input";
+ let ck=Number($("pck").value),cok=validInt(ck,0);$("pckErr").textContent=cok?"":"k must be a non-negative integer.";$("pCdf").textContent=cok?fmt(poisCdf(l,ck),9):"Invalid input";$("pTail").textContent=cok?fmt(1-poisCdf(l,ck),9):"Invalid input";
+ let upper=l===0?0:Math.min(10000,Math.ceil(l+9*Math.sqrt(l)+12));drawChart("pChart",Array.from({length:upper+1},(_,i)=>({x:i,y:poisPmf(l,i)})),l,"Number of events X");
+}
+function updateGeo(){
+ let p=Number($("gp").value),ok=Number.isFinite(p)&&p>0&&p<=1;$("gpErr").textContent=ok?"":"p must be greater than 0 and at most 1.";if(!ok){$("gSelected").textContent="Please correct the invalid parameter.";return}
+ $("gSelected").textContent=`Selected value: p = ${p}`;let mean=1/p,variance=(1-p)/(p*p),sd=Math.sqrt(1-p)/p,second=variance+mean*mean,skew=p<1?(2-p)/Math.sqrt(1-p):"Undefined";
+ setStats("gStats",[["Mean",fmt(mean)],["Variance",fmt(variance)],["Standard deviation",fmt(sd)],["Second moment E[X²]",fmt(second)],["Skewness",fmt(skew)]]);
+ let k=Number($("gk").value),okK=validInt(k,1);$("gkErr").textContent=okK?"":"k must be a positive integer (k ≥ 1).";$("gPmf").textContent=okK?fmt(geoPmf(p,k),9):"Invalid input";
+ let ck=Number($("gck").value),cok=validInt(ck,1);$("gckErr").textContent=cok?"":"k must be a positive integer (k ≥ 1).";$("gCdf").textContent=cok?fmt(geoCdf(p,ck),9):"Invalid input";$("gTail").textContent=cok?fmt(1-geoCdf(p,ck),9):"Invalid input";
+ let upper=p===1?1:Math.min(5000,Math.max(1,Math.ceil(Math.log(1e-4)/Math.log1p(-p))));drawChart("gChart",Array.from({length:upper},(_,i)=>({x:i+1,y:geoPmf(p,i+1)})),mean,"Trial number X");
+}
+document.querySelectorAll("nav button").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b===btn));document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===btn.dataset.page));}));
+["bn","bp","bk","bck"].forEach(id=>$(id).addEventListener("input",updateBin));
+["pl","pk","pck"].forEach(id=>$(id).addEventListener("input",updatePois));
+["gp","gk","gck"].forEach(id=>$(id).addEventListener("input",updateGeo));
+updateBin();updatePois();updateGeo();
+</script>
+</body>
+</html>
